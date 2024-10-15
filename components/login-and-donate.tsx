@@ -2,7 +2,7 @@
 
 import {useState} from "react"
 import {useAccount, useSendTransaction} from "wagmi"
-import {parseEther} from "viem"
+import {getAddress, parseEther} from "viem"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
@@ -27,14 +27,16 @@ export default function LoginAndDonate() {
         }
 
         try {
-            const tx = await sendTransaction({
-                to: tokenAddress,
+            const tx = sendTransaction({
+                to: getAddress(tokenAddress),
                 value: parseEther(amount),
             })
 
+            console.log("Tx: ", tx)
+
             toast({
                 title: "Transaction Sent",
-                description: `Transaction hash: ${tx.hash}`,
+                description: `Transaction hash: n/a`,
             })
         } catch (error) {
             toast({
@@ -42,6 +44,7 @@ export default function LoginAndDonate() {
                 description: "Failed to send transaction. Please try again.",
                 variant: "destructive",
             })
+            console.error(error)
         }
     }
 

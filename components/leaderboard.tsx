@@ -36,6 +36,7 @@ const MOCK_DATA: LeaderboardEntry[] = [
 ]
 
 export default function Leaderboard({ initialData = MOCK_DATA }: { initialData?: LeaderboardEntry[] }) {
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [data, setData] = useState<LeaderboardEntry[]>(initialData)
     const [sortColumn, setSortColumn] = useState<"address" | "tokenAmount">("tokenAmount")
     const [sortDirection, setSortDirection] = useState<SortDirection>("desc")
