@@ -35,7 +35,7 @@ export default function DistributionPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Split Not Found</CardTitle>
-                        <CardDescription>No Split found at address {SPLIT_ADDRESS}</CardDescription>
+                        <CardDescription>No Split found at address {address}</CardDescription>
                     </CardHeader>
                 </Card>
             </div>

@@ -6,8 +6,9 @@ import {getPublicClient} from "@wagmi/core";
 
 // Get projectId from https://cloud.reown.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
+export const splitsApiKey = process.env.NEXT_PUBLIC_SPLITS_API_KEY
 
-if (!projectId) {
+if (!projectId || !splitsApiKey) {
     throw new Error('Project ID is not defined')
 }
 
@@ -39,6 +40,6 @@ export const splitsConfig = {
     chainId: 11155111,
     publicClient,
     apiConfig: {
-        apiKey: process.env.NEXT_PUBLIC_SPLITS_API_KEY,
+        apiKey: splitsApiKey,
     }
 }
