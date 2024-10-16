@@ -1,6 +1,8 @@
 import Leaderboard from "@/components/leaderboard";
 import LoginAndDonate from "@/components/login-and-donate";
 import OrganizationCards from "@/components/organization-cards";
+import Link from "next/link";
+import {ArrowRight} from "lucide-react";
 
 export default function Home() {
     return (
@@ -10,6 +12,10 @@ export default function Home() {
                 <div className="flex gap-4 items-center flex-col">
                     <OrganizationCards/>
                     <Leaderboard/>
+                    <Link href="/distribution/11155111/0x3836188746D85F15ba932FE14424DEbBdC0Cf9FD">
+                        Inspect donation flows
+                        <ArrowRight className="ml-2 h-4 w-4"/>
+                    </Link>
                     <LoginAndDonate/>
                 </div>
             </main>

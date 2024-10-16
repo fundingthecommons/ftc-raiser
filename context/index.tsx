@@ -1,12 +1,13 @@
 // context/index.tsx
 'use client'
 
-import {wagmiAdapter, projectId} from '@/config'
+import {wagmiAdapter, projectId, splitsConfig} from '@/config'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {createAppKit} from '@reown/appkit/react'
 import {mainnet, sepolia} from 'wagmi/chains'
 import React, {type ReactNode} from 'react'
 import {cookieToInitialState, WagmiProvider, type Config} from 'wagmi'
+import {SplitsProvider} from "@0xsplits/splits-sdk-react";
 
 // Set up queryClient
 const queryClient = new QueryClient()
@@ -40,7 +41,11 @@ function ContextProvider({children, cookies}: { children: ReactNode; cookies: st
 
     return (
         <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+                <SplitsProvider config={splitsConfig}>
+                    {children}
+                </SplitsProvider>
+            </QueryClientProvider>
         </WagmiProvider>
     )
 }
