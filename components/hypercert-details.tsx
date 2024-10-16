@@ -19,12 +19,19 @@ export default function HypercertDetails() {
         return <div>No data available</div>;
     }
 
+
+    // TODO fix types for hypercert data object using gql Fragments
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const imageSrc = (hypercertData as any).metadata.image;
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const description = (hypercertData as any).metadata.description;
+
     return (
         <div className="container p-4">
             <div className="container mx-auto p-4">
                 <div className="relative w-full h-[450px]"> {/* Set a fixed height container */}
                     <Image
-                        src={hypercertData.metadata.image}
+                        src={imageSrc}
                         alt="hypercerts card image"
                         fill
                         style={{
@@ -33,7 +40,7 @@ export default function HypercertDetails() {
                         }}
                     />
                 </div>
-                <p>{hypercertData.metadata.description}</p>
+                <p>{description}</p>
             </div>
         </div>
     );

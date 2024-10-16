@@ -15,7 +15,7 @@ const query = gql
                     external_url
                     work_scope
                     work_timeframe_from
-                    work_timeframe_to  
+                    work_timeframe_to
                     contributors
                 }
                 hypercert_id
@@ -44,7 +44,7 @@ const query = gql
 export function useFetchHypercert(hypercertId = "11155111-0xa16DFb32Eb140a6f3F2AC68f41dAd8c7e83C4941-235135115542368478253191853735351834116096") {
     const [hypercertData, setHypercertData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchHypercert() {
@@ -65,14 +65,19 @@ export function useFetchHypercert(hypercertId = "11155111-0xa16DFb32Eb140a6f3F2A
                     hypercert_id: `${chainId}-${_contractAddress}-${tokenId}`,
                 });
 
-                const hypercertFullFragment = res.hypercerts?.data?.[0];
+
+                // TODO fix types for hypercert data object using gql Fragments
+                //eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const hypercertFullFragment = (res as any).hypercerts?.data?.[0];
                 if (!hypercertFullFragment) {
                     throw new Error("Hypercert not found");
                 }
 
                 setHypercertData(hypercertFullFragment);
             } catch (err) {
-                setError(err.message);
+                const errorMessage = err instanceof Error ? err.message : "unkown error";
+                console.error(err);
+                setError(errorMessage);
             } finally {
                 setIsLoading(false);
             }
@@ -81,5 +86,5 @@ export function useFetchHypercert(hypercertId = "11155111-0xa16DFb32Eb140a6f3F2A
         fetchHypercert();
     }, [hypercertId]);
 
-    return { hypercertData, isLoading, error };
+    return {hypercertData, isLoading, error};
 }
