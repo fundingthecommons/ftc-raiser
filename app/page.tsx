@@ -1,3 +1,4 @@
+import '@decent.xyz/the-box/index.css';
 import Leaderboard from "@/components/leaderboard";
 import LoginAndDonate from "@/components/login-and-donate";
 import OrganizationCards from "@/components/organization-cards";

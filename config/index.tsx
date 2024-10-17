@@ -2,7 +2,9 @@ import {cookieStorage, createConfig, createStorage} from 'wagmi'
 import {WagmiAdapter} from '@reown/appkit-adapter-wagmi'
 import {sepolia, mainnet, Chain,} from 'wagmi/chains'
 import {http} from "viem";
-import {getPublicClient} from "@wagmi/core";
+import {getPublicClient, getWalletClient, switchChain} from "@wagmi/core";
+import {createConfig as creatLiFiConfig, EVM} from '@lifi/sdk'
+
 
 // Get projectId from https://cloud.reown.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
@@ -43,3 +45,15 @@ export const splitsConfig = {
         apiKey: splitsApiKey,
     }
 }
+
+
+export const lifiConfig = creatLiFiConfig({
+    integrator: 'BB-testing',
+    providers: [EVM({
+        getWalletClient: () => getWalletClient(wagmiConfig),
+        switchChain: async (chainId) => {
+            const chain = await switchChain(wagmiConfig, {chainId});
+            return getWalletClient(wagmiConfig, {chainId: chain.id});
+        },
+    })]
+})

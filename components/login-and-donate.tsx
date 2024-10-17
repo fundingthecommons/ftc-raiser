@@ -8,6 +8,8 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {toast} from "@/hooks/use-toast";
 import ConnectButton from "@/components/connect-button";
+import {ChainId, getQuote} from '@lifi/sdk'
+import SwapForm from "@/components/swap-form";
 
 export default function LoginAndDonate() {
     const {isConnected} = useAccount()
@@ -53,37 +55,7 @@ export default function LoginAndDonate() {
             {!isConnected ? (
                 <ConnectButton/>
             ) : (
-                <div className="flex flex-col space-y-4">
-                    <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="tokenAddress">Token Address</Label>
-                            <Input
-                                id="tokenAddress"
-                                placeholder="0x..."
-                                value={tokenAddress}
-                                onChange={(e) => setTokenAddress(e.target.value)}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="amount">Amount</Label>
-                            <Input
-                                id="amount"
-                                type="number"
-                                step="0.000000000000000001"
-                                min="0"
-                                placeholder="0.0"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                            />
-                        </div>
-                        <Button onClick={handleDonate} className="w-full">
-                            Donate
-                        </Button>
-                    </form>
-                    <div className="flex justify-center space-y-2">
-                        <ConnectButton/>
-                    </div>
-                </div>
+                <SwapForm/>
             )}
         </div>
     )
