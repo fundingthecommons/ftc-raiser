@@ -1,10 +1,5 @@
 // app/page.tsx
-import Navbar from "@/components/nav-bar";
-import OrganizationCards from "@/components/organization-cards";
 import Leaderboard from "@/components/leaderboard";
-import LoginAndDonate from "@/components/login-and-donate";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 export default function Home() {
     return (
