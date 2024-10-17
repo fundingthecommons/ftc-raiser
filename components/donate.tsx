@@ -55,6 +55,8 @@ export default function LoginAndDonate() {
             ) : (
                 <div className="flex flex-col space-y-4">
                     <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+                        <h4 className="text-2xl font-semibold mb-4">Support local NGOs</h4>
+                    
                         <div className="space-y-2">
                             <Label htmlFor="tokenAddress">Token Address</Label>
                             <Input
