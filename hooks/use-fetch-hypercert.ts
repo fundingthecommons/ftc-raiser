@@ -65,7 +65,6 @@ export function useFetchHypercert(hypercertId = "11155111-0xa16DFb32Eb140a6f3F2A
                     hypercert_id: `${chainId}-${_contractAddress}-${tokenId}`,
                 });
 
-
                 // TODO fix types for hypercert data object using gql Fragments
                 //eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const hypercertFullFragment = (res as any).hypercerts?.data?.[0];
