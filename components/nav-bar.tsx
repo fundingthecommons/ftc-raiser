@@ -20,6 +20,9 @@ const Navbar = () => {
                 <Link href="/leaderboard" className="text-white hover:text-gray-200 transition-colors">
                     Leaderboard
                 </Link>
+                <Link href="/distribution/11155111/0x3836188746D85F15ba932FE14424DEbBdC0Cf9FD" className="text-white hover:text-gray-200 transition-colors">
+                    Distribution
+                </Link>
             </div>
             <div> <ConnectButton/></div>
         </nav>
