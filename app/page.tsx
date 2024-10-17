@@ -1,5 +1,5 @@
-import LoginAndDonate from "@/components/login-and-donate";
 import Image from "next/image";
+import LoginAndDonate from "@/components/login-and-donate";
 
 export default function Home() {
     return (
