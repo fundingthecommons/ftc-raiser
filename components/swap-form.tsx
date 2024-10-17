@@ -1,7 +1,7 @@
 'use client'
 
 import {useState} from 'react'
-import {ChainId, executeRoute, getQuote, getRoutes, Route, RouteExtended} from '@lifi/sdk'
+import {ChainId, executeRoute, getRoutes, Route} from '@lifi/sdk'
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
@@ -20,7 +20,7 @@ export default function SwapForm() {
     const [result, setResult] = useState<Route[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const {address, chainId} = useAccount()
+    const {address, chainId} = useAccount();
 
     const handleSubmitQuote = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -73,8 +73,8 @@ export default function SwapForm() {
     return (
         <Card className="w-full max-w-md mx-auto">
             <CardHeader>
-                <CardTitle>Swap Service</CardTitle>
-                <CardDescription>Enter the amount you want to donate</CardDescription>
+                <CardTitle>Donate</CardTitle>
+                <CardDescription>Enter the amount you want to donate, we handle bridging and swapping</CardDescription>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmitQuote}>
@@ -111,7 +111,7 @@ export default function SwapForm() {
                         </Accordion>
                     </div>
                     <Button className="w-full mt-4" type="submit" disabled={isLoading}>
-                        {isLoading ? 'Loading...' : 'Get Quote'}
+                        {isLoading ? 'Loading...' : 'Get quote'}
                     </Button>
                 </form>
             </CardContent>
