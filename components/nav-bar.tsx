@@ -11,6 +11,9 @@ const Navbar = () => {
                 <Image src="/images/ftc-logo.png" alt="Funding the Commons Logo" width={200} height={58} />
             </div>
             <div className="flex items-center space-x-6">
+                <Link href="/" className="text-white hover:text-gray-200 transition-colors">
+                    Home
+                </Link>
                 <Link href="/organizations" className="text-white hover:text-gray-200 transition-colors">
                     Organizations
                 </Link>

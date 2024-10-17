@@ -9,7 +9,6 @@ import { ArrowRight } from "lucide-react";
 export default function Home() {
     return (
         <div className="flex flex-col min-h-screen">
-            <Navbar />
             <main className="flex flex-col items-center justify-center flex-grow p-8 gap-8">
                 <OrganizationCards />
                 <Leaderboard />
