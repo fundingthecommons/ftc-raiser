@@ -3,6 +3,7 @@ import LoginAndDonate from "@/components/login-and-donate";
 import OrganizationCards from "@/components/organization-cards";
 import Link from "next/link";
 import {ArrowRight} from "lucide-react";
+import HypercertDetails from "@/components/hypercert-details";
 
 export default function Home() {
     return (
@@ -10,6 +11,7 @@ export default function Home() {
             className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
                 <div className="flex gap-4 items-center flex-col">
+                    <HypercertDetails/>
                     <OrganizationCards/>
                     <Leaderboard/>
                     <Link href="/distribution/11155111/0x3836188746D85F15ba932FE14424DEbBdC0Cf9FD">
