@@ -31,7 +31,7 @@ const Navbar = () => {
                     <Link href="/" className="text-white hover:text-gray-200 transition-colors">Home</Link>
                     <Link href="/organizations" className="text-white hover:text-gray-200 transition-colors">Organizations</Link>
                     <Link href="/leaderboard" className="text-white hover:text-gray-200 transition-colors">Leaderboard</Link>
-                    <Link href="/distribution/11155111/0x3836188746D85F15ba932FE14424DEbBdC0Cf9FD" className="text-white hover:text-gray-200 transition-colors">Distribution</Link>
+                    <Link href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF" className="text-white hover:text-gray-200 transition-colors">Distribution</Link>
                     <ConnectButton />
                 </div>
             </div>
@@ -41,7 +41,7 @@ const Navbar = () => {
                 <Link href="/" className="block text-white hover:text-gray-200 transition-colors py-2">Home</Link>
                 <Link href="/organizations" className="block text-white hover:text-gray-200 transition-colors py-2">Organizations</Link>
                 <Link href="/leaderboard" className="block text-white hover:text-gray-200 transition-colors py-2">Leaderboard</Link>
-                <Link href="/distribution/11155111/0x3836188746D85F15ba932FE14424DEbBdC0Cf9FD" className="block text-white hover:text-gray-200 transition-colors py-2">Distribution</Link>
+                <Link href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF" className="block text-white hover:text-gray-200 transition-colors py-2">Distribution</Link>
                 <div className="mt-4">
                     <ConnectButton />
                 </div>

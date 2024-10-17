@@ -1,7 +1,6 @@
 "use client"
 
 import {useAccount,} from "wagmi"
-import ConnectButton from "@/components/connect-button";
 import SwapForm from "@/components/swap-form";
 
 export default function LoginAndDonate() {
@@ -9,9 +8,7 @@ export default function LoginAndDonate() {
 
     return (
         <div className="container mx-auto p-4">
-            {!isConnected ? (
-                <ConnectButton/>
-            ) : (
+            {!isConnected ? undefined : (
                 <SwapForm/>
             )}
         </div>
