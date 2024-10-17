@@ -2,6 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+1. Copy the .env.sample to .env.local
+2. Visit https://cloud.reown.com/ and create a new project
+3. Copy the projectId and splitsApiKey into the .env.local file as NEXT_PUBLIC_PROJECT_ID
+4. Navigate to https://app.splits.org/settings and create a new API key
+5. Copy the API key into the .env.local file as NEXT_PUBLIC_SPLITS_API_KEY
+
+
 First, run the development server:
 
 ```bash
