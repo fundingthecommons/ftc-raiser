@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -33,12 +32,12 @@ export default function OrganizationCards({
   const filteredOrgs = initialOrgs.filter(
     (org) =>
       org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.description.toLowerCase().includes(searchTerm.toLowerCase())
+      org.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
-    <div className="container mx-auto pt-4 px-4 flex flex-col">
-      <div className="relative mb-4 w-64">
+    <div className="container mx-auto px-4">
+      <div className="relative mb-4 w-64 mt-4">
         <Input
           type="text"
           placeholder="Search organizations"
@@ -54,28 +53,24 @@ export default function OrganizationCards({
       <div className="flex-grow">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredOrgs.map((org) => (
-            <Link href={`/org/${org.id}`} key={org.id}>
-              <Card className="h-full hover:shadow-lg transition-shadow duration-200">
+            <Link href={`/org/${org.id}`} key={org.id} className="h-full">
+              <Card className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+                <div className="w-full h-64 relative">
+                  <Image
+                    src={org.imageUrl}
+                    alt={org.name}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
                 <CardHeader>
-                  <div className="w-full h-48 relative mb-4">
-                    <Image
-                      src={org.imageUrl}
-                      alt={org.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="rounded-t-lg"
-                    />
-                  </div>
                   <CardTitle>{org.name}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription>{org.description}</CardDescription>
+                <CardContent className="flex-grow">
+                  <CardDescription className="line-clamp-5 text-sm font-md">
+                    {org.description}
+                  </CardDescription>
                 </CardContent>
-                <CardFooter>
-                  <p className="text-sm text-muted-foreground">
-                    Click to view details
-                  </p>
-                </CardFooter>
               </Card>
             </Link>
           ))}
