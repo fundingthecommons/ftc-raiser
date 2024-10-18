@@ -4,7 +4,7 @@
 import {wagmiAdapter, projectId, splitsConfig} from '@/config'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {createAppKit} from '@reown/appkit/react'
-import {mainnet, sepolia} from 'wagmi/chains'
+import {arbitrum, base, celo, gnosis, linea, mainnet, optimism, polygon} from 'wagmi/chains'
 import React, {type ReactNode} from 'react'
 import {cookieToInitialState, WagmiProvider, type Config} from 'wagmi'
 import {SplitsProvider} from "@0xsplits/splits-sdk-react";
@@ -28,8 +28,8 @@ const metadata = {
 const modal = createAppKit({
     adapters: [wagmiAdapter],
     projectId,
-    networks: [sepolia, mainnet],
-    defaultNetwork: sepolia,
+    networks: [optimism, base, arbitrum, celo, polygon, gnosis, linea, mainnet],
+    defaultNetwork: optimism,
     metadata: metadata,
     features: {
         analytics: true, // Optional - defaults to your Cloud configuration
