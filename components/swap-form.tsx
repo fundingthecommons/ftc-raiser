@@ -79,20 +79,6 @@ export default function SwapForm() {
         loadTokens();
     }, [chainId, address]);
 
-    useEffect(() => {
-        if (tokenAddress) {
-
-            const getTokenSymbol = async (tokenAddress: string) => {
-                const res = await fetchAllSupportedTokensFromLiFi(chainId)
-                if (!res || !chainId) return "n/a";
-                const token = res.tokens[chainId].filter((token) => token.address === tokenAddress)[0]
-                if (token) setTokenSymbol(token.symbol);
-            }
-
-            getTokenSymbol(tokenAddress);
-        }
-    }, [tokenAddress]);
-
     const handleSubmitQuote = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
