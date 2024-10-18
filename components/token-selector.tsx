@@ -1,10 +1,12 @@
 'use client'
 
-import { TokenBalance } from 'alchemy-sdk'
+import {TokenBalance, TokenMetadataResponse} from 'alchemy-sdk'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
+export type ExtendedTokenBalance = TokenBalance & TokenMetadataResponse
+
 export type TokenSelectorProps = {
-    tokens: TokenBalance[]
+    tokens: ExtendedTokenBalance[]
     selectedToken: string
     onSelectChange: (value: string) => void
 }

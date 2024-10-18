@@ -1,6 +1,6 @@
 import {Alchemy, Network, TokenBalance} from "alchemy-sdk"
 import {alchemyApiKey as ALCHEMY_API_KEY} from "@/config"
-import {ChainId, ChainType, getTokens} from '@lifi/sdk';
+import {ChainId, getTokens} from '@lifi/sdk';
 
 const chainIdToAlchemyNetwork = {
     1: Network.ETH_MAINNET,
@@ -58,6 +58,8 @@ const getLiFiChainFromChainId = (chainId: number) => {
             return ChainId.POL
         case 42220:
             return ChainId.CEL
+        case 8453:
+            return ChainId.BAS
         default:
             return;
     }

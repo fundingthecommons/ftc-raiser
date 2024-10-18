@@ -8,14 +8,13 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion"
 import {useAccount} from "wagmi"
-import TokenSelector from "@/components/token-selector"
-import {TokenBalance} from "alchemy-sdk"
+import TokenSelector, {ExtendedTokenBalance} from "@/components/token-selector"
 import {fetchAllSupportedTokensFromLiFi, fetchTokenBalances, fetchTokenMetadata} from "@/lib/tokenUtils"
 
 export default function SwapForm() {
     const [amount, setAmount] = useState('')
     const [tokenAddress, setTokenAddress] = useState('')
-    const [tokens, setTokens] = useState<TokenBalance[]>([])
+    const [tokens, setTokens] = useState<ExtendedTokenBalance[]>([])
     const [result, setResult] = useState<Route[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
