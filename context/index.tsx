@@ -1,53 +1,69 @@
 // context/index.tsx
-'use client'
+"use client";
 
-import {wagmiAdapter, projectId, splitsConfig} from '@/config'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-import {createAppKit} from '@reown/appkit/react'
-import {arbitrum, base, celo, gnosis, linea, mainnet, optimism, polygon} from 'wagmi/chains'
-import React, {type ReactNode} from 'react'
-import {cookieToInitialState, WagmiProvider, type Config} from 'wagmi'
-import {SplitsProvider} from "@0xsplits/splits-sdk-react";
+import { wagmiAdapter, projectId, splitsConfig } from "@/config";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createAppKit } from "@reown/appkit/react";
+import {
+	arbitrum,
+	base,
+	celo,
+	gnosis,
+	linea,
+	mainnet,
+	optimism,
+	polygon,
+} from "wagmi/chains";
+import React, { type ReactNode } from "react";
+import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
+import { SplitsProvider } from "@0xsplits/splits-sdk-react";
 
 // Set up queryClient
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 if (!projectId) {
-    throw new Error('Project ID is not defined')
+	throw new Error("Project ID is not defined");
 }
 
 // Set up metadata
 const metadata = {
-    name: 'ftc raiser',
-    description: 'AppKit Example',
-    url: 'https://reown.com/appkit', // origin must match your domain & subdomain
-    icons: ['https://assets.reown.com/reown-profile-pic.png']
-}
+	name: "ftc raiser",
+	description: "AppKit Example",
+	url: "https://reown.com/appkit", // origin must match your domain & subdomain
+	icons: ["https://assets.reown.com/reown-profile-pic.png"],
+};
 
 // Create the modal
 const modal = createAppKit({
-    adapters: [wagmiAdapter],
-    projectId,
-    networks: [optimism, base, arbitrum, celo, polygon, gnosis, linea, mainnet],
-    defaultNetwork: optimism,
-    metadata: metadata,
-    features: {
-        analytics: true, // Optional - defaults to your Cloud configuration
-    }
-})
+	adapters: [wagmiAdapter],
+	projectId,
+	networks: [optimism, base, arbitrum, celo, polygon, gnosis, linea, mainnet],
+	defaultNetwork: optimism,
+	metadata: metadata,
+	features: {
+		analytics: true, // Optional - defaults to your Cloud configuration
+	},
+});
 
-function ContextProvider({children, cookies}: { children: ReactNode; cookies: string | null }) {
-    const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
+function ContextProvider({
+	children,
+	cookies,
+}: { children: ReactNode; cookies: string | null }) {
+	const initialState = cookieToInitialState(
+		wagmiAdapter.wagmiConfig as Config,
+		cookies,
+	);
 
-    return (
-        <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>
-                <SplitsProvider config={splitsConfig}>
-                    {children}
-                </SplitsProvider>
-            </QueryClientProvider>
-        </WagmiProvider>
-    )
+	return (
+		<WagmiProvider
+			config={wagmiAdapter.wagmiConfig as Config}
+			initialState={initialState}
+		>
+			<QueryClientProvider client={queryClient}>
+				<SplitsProvider config={splitsConfig}>{children}</SplitsProvider>
+			</QueryClientProvider>
+		</WagmiProvider>
+	);
 }
 
-export default ContextProvider
+export default ContextProvider;
