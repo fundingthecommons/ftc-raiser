@@ -34,7 +34,7 @@ export default function TokenSelector({
                     {tokens.map((token, index) => (
                         <SelectItem key={index} value={token.contractAddress}>
                             {token.symbol || token.contractAddress}{"  "}
-                            {token.tokenBalance && <span
+                            {token.tokenBalance && token.decimals && <span
                                 className="text-xs text-gray-500">{Number(formatUnits(BigInt(token.tokenBalance), token.decimals)).toFixed(4)}</span>}
                         </SelectItem>
                     ))}
