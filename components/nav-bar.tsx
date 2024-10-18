@@ -30,7 +30,7 @@ const Navbar = () => {
                 <div className="hidden lg:flex items-center space-x-6">
                     <Link href="/" className="text-white hover:text-gray-200 transition-colors">Home</Link>
                     <Link href="/organizations" className="text-white hover:text-gray-200 transition-colors">Organizations</Link>
-                    <Link href="/leaderboard" className="text-white hover:text-gray-200 transition-colors">Leaderboard</Link>
+                    <Link href="/transactions" className="text-white hover:text-gray-200 transition-colors">Donations</Link>
                     <Link href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF" className="text-white hover:text-gray-200 transition-colors">Distribution</Link>
                     <ConnectButton />
                 </div>
@@ -40,7 +40,7 @@ const Navbar = () => {
             <div className={`lg:hidden ${isMenuOpen ? 'block' : 'hidden'} mt-4`}>
                 <Link href="/" className="block text-white hover:text-gray-200 transition-colors py-2">Home</Link>
                 <Link href="/organizations" className="block text-white hover:text-gray-200 transition-colors py-2">Organizations</Link>
-                <Link href="/leaderboard" className="block text-white hover:text-gray-200 transition-colors py-2">Leaderboard</Link>
+                <Link href="/transactions" className="block text-white hover:text-gray-200 transition-colors py-2">Donations</Link>
                 <Link href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF" className="block text-white hover:text-gray-200 transition-colors py-2">Distribution</Link>
                 <div className="mt-4">
                     <ConnectButton />
