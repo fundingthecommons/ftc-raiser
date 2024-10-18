@@ -1,26 +1,62 @@
 'use client'
 
-import {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ChainId, executeRoute, getRoutes, Route} from '@lifi/sdk'
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
-import {useAccount} from "wagmi";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion"
+import {useAccount} from "wagmi"
+import TokenSelector from "@/components/token-selector"
+import {TokenBalance} from "alchemy-sdk"
+import {fetchAllSupportedTokensFromLiFi, fetchTokenBalances, fetchTokenMetadata} from "@/lib/tokenUtils"
 
 export default function SwapForm() {
     const [amount, setAmount] = useState('')
     const [tokenAddress, setTokenAddress] = useState('')
+    const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [result, setResult] = useState<Route[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const {address, chainId} = useAccount();
+    const {address, chainId, isConnected} = useAccount()
+
+    useEffect(() => {
+        const loadTokens = async () => {
+            if (!chainId || !address) {
+                setTokens([]);
+                return;
+            }
+
+            try {
+                const [supportedTokens, balances] = await Promise.all([
+                    fetchAllSupportedTokensFromLiFi(chainId),
+                    fetchTokenBalances(address, chainId)
+                ]);
+
+                const filteredTokens = balances.filter(token =>
+                    BigInt(token.tokenBalance || '0') > BigInt(0)
+                );
+
+                const supportedTokenAddresses = new Set(
+                    supportedTokens?.tokens[chainId]?.map(token =>
+                        token.address.toLowerCase()
+                    ) || []
+                );
+
+                const overlappingTokens = filteredTokens.filter(token =>
+                    supportedTokenAddresses.has(token.contractAddress.toLowerCase())
+                );
+
+                const tokensWithMetadata = await fetchTokenMetadata(overlappingTokens, chainId);
+                setTokens(tokensWithMetadata);
+            } catch (error) {
+                console.error("Failed to fetch and process tokens:", error);
+            }
+        };
+
+        loadTokens();
+    }, [chainId, address]);
 
     const handleSubmitQuote = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -30,9 +66,7 @@ export default function SwapForm() {
 
         try {
             if (!address || !chainId) {
-                setError('No wallet or chain found.')
-
-                return;
+                throw new Error('No wallet or chain found.')
             }
             const amountInWei = BigInt(parseFloat(amount) * 1e18).toString()
             const result = await getRoutes({
@@ -45,10 +79,7 @@ export default function SwapForm() {
                 toAddress: '0xEe6196D67586f813a17E64f0dD7000D53edcb1aF'
             })
 
-            const routes = result.routes;
-            console.log(routes);
-
-            setResult(routes)
+            setResult(result.routes)
         } catch (err) {
             setError('An error occurred while fetching the quote. Please try again.')
             console.error(err)
@@ -58,16 +89,20 @@ export default function SwapForm() {
     }
 
     const handleSubmitOrder = async (route: Route) => {
-        console.log(route)
+        try {
+            const executedRoute = await executeRoute(route, {
+                updateRouteHook(route) {
+                    console.log(route)
+                },
+            })
+            console.log(executedRoute)
+        } catch (error) {
+            console.error("Failed to execute route:", error)
+        }
+    }
 
-        const executedRoute = await executeRoute(route, {
-            // Gets called once the route object gets new updates
-            updateRouteHook(route) {
-                console.log(route)
-            },
-        })
-
-        console.log(executedRoute)
+    const handleTokenChange = (value: string) => {
+        setTokenAddress(value)
     }
 
     return (
@@ -96,23 +131,24 @@ export default function SwapForm() {
                             <AccordionItem value="advanced-options">
                                 <AccordionTrigger>Advanced Options</AccordionTrigger>
                                 <AccordionContent>
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="tokenAddress">Token Address (Optional)</Label>
-                                        <Input
-                                            id="tokenAddress"
-                                            type="text"
-                                            placeholder="Enter token address"
-                                            value={tokenAddress}
-                                            onChange={(e) => setTokenAddress(e.target.value)}
-                                        />
-                                    </div>
+                                    <TokenSelector
+                                        tokens={tokens}
+                                        selectedToken={tokenAddress}
+                                        onSelectChange={handleTokenChange}
+                                    />
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
                     </div>
-                    <Button className="w-full mt-4" type="submit" disabled={isLoading}>
-                        {isLoading ? 'Loading...' : 'Get quote'}
-                    </Button>
+                    {!isConnected ? (
+                        <w3m-connect-button/>
+                    ) : (
+                        <div>
+                            <Button className="w-full mt-4" type="submit" disabled={isLoading}>
+                                {isLoading ? 'Loading...' : 'Get quote'}
+                            </Button>
+                        </div>
+                    )}
                 </form>
             </CardContent>
             <CardFooter className="flex flex-col items-start">
@@ -138,8 +174,7 @@ export default function SwapForm() {
                                         {route.toAmount}
                                     </span>
                                     </div>
-                                    <button onClick={() => handleSubmitOrder(route)}>Donate
-                                    </button>
+                                    <button onClick={() => handleSubmitOrder(route)}>Donate</button>
                                 </div>
                             ))
                         }
