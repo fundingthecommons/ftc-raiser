@@ -77,10 +77,14 @@ export const lifiConfig = creatLiFiConfig({
 	integrator: "BB-testing",
 	providers: [
 		EVM({
-			getWalletClient: () => getWalletClient(wagmiConfig),
+			getWalletClient: async () => {
+				const client = await getWalletClient(wagmiConfig);
+				return client as any; // Type assertion to bypass the mismatch
+			},
 			switchChain: async (chainId) => {
 				const chain = await switchChain(wagmiConfig, { chainId });
-				return getWalletClient(wagmiConfig, { chainId: chain.id });
+				const client = await getWalletClient(wagmiConfig, { chainId: chain.id });
+				return client as any; // Type assertion to bypass the mismatch
 			},
 		}),
 	],

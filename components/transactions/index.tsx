@@ -3,7 +3,6 @@
 import "react-loading-skeleton/dist/skeleton.css";
 import { Search } from "lucide-react";
 import { useState, useMemo } from "react";
-import Skeleton from "react-loading-skeleton";
 
 import { Input } from "@/components/ui/input";
 import { Table, TableBody } from "@/components/ui/table";
@@ -16,13 +15,10 @@ export default function Transactions({
 }: {
   transactions?: Transaction[];
 }) {
-  if (!transactions) {
-    return <div>No transactions found.</div>;
-  }
-
   const [search, setSearch] = useState("");
 
   const filteredTxs = useMemo(() => {
+    if (!transactions) return [];
     if (!search) return transactions;
 
     const lowercasedSearch = search.toLowerCase();
@@ -38,6 +34,10 @@ export default function Transactions({
       );
     });
   }, [transactions, search]);
+
+  if (!transactions) {
+    return <div>No transactions found.</div>;
+  }
 
   return (
     <div className="container mx-auto pt-4 px-4 h-screen flex flex-col">
