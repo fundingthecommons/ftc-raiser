@@ -1,50 +1,42 @@
 export const MOCK_ORGS = [
-	{
-		id: "1",
-		name: "Tech for Good",
-		description: "Leveraging technology to solve social issues",
-		imageUrl: "https://placecats.com/300/200",
-		mission:
-			"Our mission is to harness the power of technology to address pressing social challenges and improve lives.",
-		founded: "2015",
-		location: "San Francisco, CA",
-		website: "https://techforgood.org",
-		contactEmail: "info@techforgood.org",
-	},
-	{
-		id: "2",
-		name: "Green Earth Initiative",
-		description: "Promoting sustainable practices for a greener planet",
-		imageUrl: "https://placecats.com/300/200",
-		mission:
-			"We strive to create a sustainable future by promoting eco-friendly practices and environmental conservation.",
-		founded: "2010",
-		location: "Portland, OR",
-		website: "https://greenearthinitiative.org",
-		contactEmail: "contact@greenearthinitiative.org",
-	},
-	{
-		id: "3",
-		name: "Education for All",
-		description: "Providing quality education to underprivileged communities",
-		imageUrl: "https://placecats.com/300/200",
-		mission:
-			"We believe that education is the key to unlocking the potential of every child and creating a brighter future for all.",
-		founded: "2010",
-		location: "San Francisco, CA",
-		website: "https://educationforall.org",
-		contactEmail: "info@educationforall.org",
-	},
-	{
-		id: "4",
-		name: "Health First",
-		description: "Improving healthcare access in remote areas",
-		imageUrl: "https://placecats.com/300/200",
-		mission:
-			"We believe that healthcare is a fundamental right and that everyone should have access to quality, affordable healthcare.",
-		founded: "2010",
-		location: "San Francisco, CA",
-		website: "https://healthfirst.org",
-		contactEmail: "info@healthfirst.org",
-	},
+  {
+    id: "1",
+    name: "digi-cnx",
+    description:
+      "digi-cnx is a local Chiang Mai network committed to dialogue and research on how digital technologies are impacting both people and our planet.",
+    imageUrl: "/images/orgs/digi-cnx.jpg",
+    founded: "2024",
+    location: "Internet",
+    website: "https://digicnx.network/",
+  },
+  {
+    id: "2",
+    name: "Ava's House",
+    description:
+      "Ava’s House, a heartwarming creation by the resilient Dang Arjaw, a former Burmese refugee turned passionate pastor, opened its doors in 2022. Named after Dang’s 4-year-old daughter, Ava, the shelter is nestled near the vibrant city of Chiang Mai, home to 23 promising young children aged 5-15. Predominantly from the Akha indigenous community in the remote regions of Chiang Rai, these children face limited education opportunities at home.",
+    imageUrl: "/images/orgs/ava-house.jpg",
+    founded: "2022",
+    location: "Chiang Mai, Thailand",
+    website: "https://avahouse.org/",
+  },
+  {
+    id: "3",
+    name: "exile hub",
+    description:
+      "Exile Hub was formed to support human rights defenders and media professionals facing immediate threats from the junta for their essential work. Since then, we have been a dedicated and reliable support system for media professionals and human rights defenders to safely carry on their professions.",
+    imageUrl: "/images/orgs/exilehub.webp",
+    founded: "2021",
+    location: "Internet",
+    website: "https://www.exilehub.org/",
+  },
+  {
+    id: "4",
+    name: "Help Each Other ChiangMai",
+    description:
+      "A crypto community-driven initiative aimed at supporting local Chiangmai people who are impacted by flood. We’ve witnessed the struggles firsthand and are stepping up to create a fund that will directly benefit those in need.",
+    imageUrl: "/images/orgs/heo-cm.jpeg",
+    founded: "2024",
+    location: "Internet",
+    website: "https://giveth.io/project/help-each-other-chiangmai",
+  },
 ];
