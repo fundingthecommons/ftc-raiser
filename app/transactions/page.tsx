@@ -18,7 +18,7 @@ export default async function TransactionsPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex flex-col items-center justify-center flex-grow p-8 gap-8">
-        <Transactions initialData={await getTransactions()} />
+        <Transactions transactions={await getTransactions()} />
       </main>
     </div>
   );

@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
+import { ENSResolver } from "@/lib/ens";
+
+export type Transaction = {
+  senderAddress: string;
+  ensName: string | null;
+  amountInUSDC: string;
+  timestamp: string;
+};
 
 const LIFI_API_TRANSFERS_URL = process.env.LIFI_API_TRANSFERS_URL;
 const RECEIVER_ADDRESS = process.env.FUNDS_RECEIVER_ADDRESS;
@@ -24,11 +32,19 @@ async function getFilteredTransfers(walletAddress: string) {
     return [];
   }
 
-  return result.data.transfers.map((transfer: any) => ({
-    senderAddress: transfer.fromAddress,
-    amountInUSDC: (transfer.receiving.amount / 1e6).toFixed(2),
-    timestamp: new Date(transfer.receiving.timestamp * 1000).toISOString(),
-  }));
+  const ensResolver = new ENSResolver();
+  const transactions = [];
+
+  for (const transfer of result.data.transfers) {
+    const ensName = await ensResolver.resolveAddress(transfer.fromAddress);
+    transactions.push({
+      senderAddress: transfer.fromAddress,
+      ensName,
+      amountInUSDC: (transfer.receiving.amount / 1e6).toFixed(2),
+      timestamp: new Date(transfer.receiving.timestamp * 1000).toISOString(),
+    });
+  }
+  return transactions;
 }
 
 export async function GET() {
