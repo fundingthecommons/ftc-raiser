@@ -25,7 +25,7 @@ export default function DistributionPage() {
     Number(chainId),
     address
   );
-  const [chartData, setChartData] = useState<any[]>([["From", "To", "Weight"]]);
+  const [chartData, setChartData] = useState<unknown[][]>([["From", "To", "Weight"]]);
 
   useEffect(() => {
     async function resolveENSNames() {
