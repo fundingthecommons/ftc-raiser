@@ -17,74 +17,47 @@ export default function Home() {
         <LoginAndDonate />
         <div className="relative w-full max-w-4xl mx-auto px-4 py-8 mt-64">
           <h1 className="text-4xl font-bold mb-6">
-            Welcome to the Commons Forest Fundraising Campaign!
+            Support Local Heroes in Chiang Mai: Flood Relief, Humanitarian Aid,
+            and Child Protection
           </h1>
+          <p className="mb-6">Join us in making a real difference.</p>
+
           <p className="mb-6">
-            We invite you to join us at our beautiful residency just outside the
-            city, where we are hosting a unique fundraising event to support
-            five groundbreaking projects dedicated to creating public goods and
-            sustainable innovations. These projects have been carefully selected
-            for their commitment to our core values of community, collaboration,
-            and open-source principles.
+            We&apos;re raising funds to support local NGOs in Chiang Mai that
+            are at the forefront of crucial causes—flood relief, humanitarian
+            support, human rights, and child protection.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4">How You Can Help</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            These organizations include:
+          </h2>
+          <ul className="list-disc pl-6 mb-6">
+            <li>ExileHub</li>
+            <li>Ava&apos;s House</li>
+            <li>Digi CNX</li>
+            <li>Giveth Campaign: Friends Helping Friends in Chiang Mai</li>
+          </ul>
+
           <p className="mb-6">
-            We&apos;re raising funds for a communal pool, which will be{" "}
-            <strong>equitably distributed</strong> among the five selected
-            projects. Your contributions will directly empower these teams to
-            continue their important work in areas like{" "}
-            <strong>decentralized governance</strong>,{" "}
-            <strong>public goods development</strong>, and{" "}
-            <strong>sustainable living solutions</strong>.
+            This is your chance to be part of the first-ever Hyperfund—a
+            groundbreaking collaboration by Funding the Commons residents.
+            We&apos;ve created an unstoppable, peer-to-peer donation system,
+            ensuring 100% of your donation goes directly to these NGOs without
+            any intermediaries.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4">Why Visit Us</h2>
           <p className="mb-6">
-            Our residency offers a unique opportunity to experience{" "}
-            <strong>Commons Forest</strong> in action. You’ll meet the project
-            teams, explore our eco-friendly space, and participate in workshops
-            and discussions that demonstrate the innovative work happening right
-            here. It’s a chance to not only support these projects financially
-            but to also{" "}
-            <strong>immerse yourself in our thriving community</strong>
-            —learning, contributing, and connecting with like-minded
-            individuals.
+            Donate today and for the next 30 days, and you&apos;ll receive a
+            special Hypercert that commemorates your participation in this
+            historic initiative. By giving now, you&apos;re not just helping
+            Chiang Mai—you&apos;re joining a global movement to fund the commons
+            and build a better world.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4">The Projects</h2>
-          <p className="mb-6">
-            Each project aligns with our mission to foster sustainability,
-            decentralized collaboration, and public goods innovation. From{" "}
-            <strong>local environmental initiatives</strong> to{" "}
-            <strong>global decentralized governance solutions</strong>, these
-            projects represent the future of how communities can work together
-            for the common good.
-          </p>
-
-          <h2 className="text-2xl font-semibold mb-4">How to Contribute</h2>
-          <p className="mb-6">
-            We invite you to make a donation of any size to the{" "}
-            <strong>Commons Forest Fund</strong>. Your contributions will be
-            pooled and distributed among the five selected projects. By
-            donating, you&apos;ll also gain voting power to help decide how the
-            funds are allocated, giving you a say in shaping the future of
-            public goods.
-          </p>
-
-          <h2 className="text-2xl font-semibold mb-4">Join Us</h2>
-          <p className="mb-6">
-            Join us for a day of connection, learning, and collaboration.
-            Together, we can <strong>build a better future</strong> by
-            supporting projects that prioritize the health of our communities
-            and our planet.
-          </p>
-
-          <p className="mt-6">
-            We look forward to welcoming you to Commons Forest! Your presence
-            and contributions, whether big or small, will make a lasting impact.
-          </p>
-          <br />
+          <h2 className="text-2xl font-semibold mb-4">
+            Every Donation Counts. Every Hypercert Matters.
+          </h2>
+          <p className="mb-6">Start making an impact now.</p>
         </div>
       </main>
     </div>
