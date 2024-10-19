@@ -65,12 +65,12 @@ export default function SwapForm() {
 
                     const nativeToken = {
                         contractAddress: "0x0000000000000000000000000000000000000000",
-                        tokenBalance: balance.value,
+                        tokenBalance: balance.data?.value,
                         name: chain.nativeCurrency.name || "Native",
                         symbol: chain.nativeCurrency.symbol || "",
                         decimals: chain.nativeCurrency.decimals,
                         logo: null,
-                    };
+                    } as unknown as ExtendedTokenBalance;
 
                     setTokens([nativeToken, ...tokensWithMetadata]);
                 } catch
