@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ChainId, executeRoute, getRoutes, Route } from "@lifi/sdk";
+import { ChainId, executeRoute, getRoutes, Route, getStatus } from "@lifi/sdk";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,6 +39,10 @@ export default function SwapForm() {
   const { address, chainId, isConnected } = useAccount();
   const [selectedToken, setSelectedToken] =
     useState<ExtendedTokenBalance | null>(null);
+  const [isDonating, setIsDonating] = useState(false);
+  const [txStatus, setTxStatus] = useState<"idle" | "pending" | "success">(
+    "idle"
+  );
 
   useEffect(() => {
     const loadTokens = async () => {
@@ -105,7 +109,13 @@ export default function SwapForm() {
       });
 
       console.log(result);
-      setResult(result.routes);
+
+      // Select the most optimal route (maximum donation output)
+      const optimalRoute = result.routes.reduce((max, route) =>
+        BigInt(route.toAmount) > BigInt(max.toAmount) ? route : max
+      );
+
+      setResult([optimalRoute]);
     } catch (err) {
       setError("An error occurred while fetching the quote. Please try again.");
       console.error(err);
@@ -115,16 +125,24 @@ export default function SwapForm() {
   };
 
   const handleSubmitOrder = async (route: Route) => {
+    setIsDonating(true);
+    setTxStatus("pending");
+    setError(null);
     try {
       const executedRoute = await executeRoute(route, {
-        updateRouteHook(route) {
-          console.log(route);
+        updateRouteHook(updatedRoute) {
+          console.log("updateRouteHook", updatedRoute);
         },
       });
 
-      console.log(executedRoute);
+      console.log("executedRoute", executedRoute);
+      // Handle successful donation here (e.g., show a success message)
     } catch (error) {
       console.error("Failed to execute route:", error);
+      setError("Failed to process donation. Please try again.");
+      setTxStatus("idle");
+    } finally {
+      setIsDonating(false);
     }
   };
 
@@ -135,11 +153,11 @@ export default function SwapForm() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-white shadow-xl">
+    <Card>
       <CardHeader>
         <CardTitle>Donate</CardTitle>
         <CardDescription>
-          Enter the amount you want to donate, we handle bridging and swapping
+          Support the project by donating crypto
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -175,40 +193,70 @@ export default function SwapForm() {
               </AccordionItem>
             </Accordion>
           </div>
-          {!isConnected ? (
-            <w3m-connect-button />
-          ) : (
-            <div>
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              type="submit"
+              className={`text-gray-700 font-semibold ${
+                result && result.length > 0
+                  ? "w-auto px-4 bg-gray-200 hover:bg-gray-300"
+                  : "w-full bg-primary text-primary-foreground"
+              }`}
+              disabled={isLoading || isDonating}
+            >
+              {isLoading
+                ? "Loading..."
+                : result && result.length > 0
+                ? "Get another quote"
+                : "Get quote"}
+            </Button>
+            {result && result.length > 0 && (
               <Button
-                className="w-full mt-4"
-                type="submit"
-                disabled={isLoading}
+                onClick={() => handleSubmitOrder(result[0])}
+                className={`flex-grow ml-2 font-semibold ${
+                  txStatus === "success"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-blue-500 hover:bg-blue-600"
+                } text-white`}
+                disabled={isLoading || isDonating}
               >
-                {isLoading ? "Loading..." : "Get quote"}
+                {isDonating
+                  ? "Processing..."
+                  : txStatus === "success"
+                  ? "Donated!"
+                  : "Donate"}
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </form>
       </CardContent>
       <CardFooter className="flex flex-col items-start">
-        {result && (
-          <div>
-            {result.map((route, index) => (
-              <div key={index} className="flex flex-col space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">{route.fromToken.symbol}</span>
-                  <span>{route.fromAmount}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">{route.toToken.symbol}</span>
-                  <span>{route.toAmount}</span>
-                </div>
-                <button onClick={() => handleSubmitOrder(route)}>Donate</button>
-              </div>
-            ))}
+        {result && result.length > 0 && (
+          <div className="w-full p-4 bg-gray-100 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-medium">
+                From {result[0].fromToken.symbol}
+              </span>
+              <span>
+                {parseFloat(result[0].fromAmount) /
+                  10 ** result[0].fromToken.decimals}
+              </span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-medium">To {result[0].toToken.symbol}</span>
+              <span>
+                {parseFloat(result[0].toAmount) /
+                  10 ** result[0].toToken.decimals}
+              </span>
+            </div>
+            <div className="text-sm text-gray-600">
+              Estimated gas cost: {result[0].gasCostUSD} USD
+            </div>
           </div>
         )}
         {error && <div className="text-red-500 mt-2">{error}</div>}
+        {txStatus === "success" && (
+          <div className="text-green-500 mt-2">Transaction successful!</div>
+        )}
       </CardFooter>
     </Card>
   );
