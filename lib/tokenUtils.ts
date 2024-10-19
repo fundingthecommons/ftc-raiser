@@ -83,7 +83,6 @@ export const fetchAllSupportedTokensFromLiFi = async (chainId: number) => {
 			throw new Error(`Chain ${chainId} not supported`);
 		}
 
-		console.log("Chain: ", chain);
 		return await getTokens({
 			chains: [chain],
 		});

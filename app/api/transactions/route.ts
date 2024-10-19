@@ -28,8 +28,6 @@ async function getFilteredTransfers(walletAddress: string) {
     },
   });
 
-  console.log(result.data);
-
   if (!result.data?.transfers?.length) {
     return [];
   }
@@ -56,8 +54,6 @@ export async function GET() {
 
   try {
     const data = await getFilteredTransfers(RECEIVER_ADDRESS);
-
-    console.log(data);
     return NextResponse.json(data);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
