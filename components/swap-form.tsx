@@ -116,6 +116,8 @@ export default function SwapForm() {
 					console.log(route);
 				},
 			});
+
+			console.log(executedRoute);
 		} catch (error) {
 			console.error("Failed to execute route:", error);
 		}
