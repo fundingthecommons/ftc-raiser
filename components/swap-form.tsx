@@ -18,8 +18,13 @@ export default function SwapForm() {
     const [result, setResult] = useState<Route[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const {address, chainId, isConnected} = useAccount();
-    const [selectedToken, setSelectedToken] = useState<ExtendedTokenBalance | null>(null);
+    const {address, chainId} = useAccount();
+    const [selectedToken, setSelectedToken] =
+        useState<ExtendedTokenBalance | null>(null);
+    const [isDonating, setIsDonating] = useState(false);
+    const [txStatus, setTxStatus] = useState<"idle" | "pending" | "success">(
+        "idle"
+    );
 
     useEffect(() => {
         const loadTokens = async () => {
@@ -35,22 +40,22 @@ export default function SwapForm() {
                 ]);
 
                 const filteredTokens = balances.filter(
-                    (token) => BigInt(token.tokenBalance || "0") > BigInt(0),
+                    (token) => BigInt(token.tokenBalance || "0") > BigInt(0)
                 );
 
                 const supportedTokenAddresses = new Set(
                     supportedTokens?.tokens[chainId]?.map((token) =>
-                        token.address.toLowerCase(),
-                    ) || [],
+                        token.address.toLowerCase()
+                    ) || []
                 );
 
                 const overlappingTokens = filteredTokens.filter((token) =>
-                    supportedTokenAddresses.has(token.contractAddress.toLowerCase()),
+                    supportedTokenAddresses.has(token.contractAddress.toLowerCase())
                 );
 
                 const tokensWithMetadata = await fetchTokenMetadata(
                     overlappingTokens,
-                    chainId,
+                    chainId
                 );
                 setTokens(tokensWithMetadata);
             } catch (error) {
@@ -86,7 +91,13 @@ export default function SwapForm() {
             });
 
             console.log(result);
-            setResult(result.routes);
+
+            // Select the most optimal route (maximum donation output)
+            const optimalRoute = result.routes.reduce((max, route) =>
+                BigInt(route.toAmount) > BigInt(max.toAmount) ? route : max
+            );
+
+            setResult([optimalRoute]);
         } catch (err) {
             setError("An error occurred while fetching the quote. Please try again.");
             console.error(err);
@@ -96,42 +107,54 @@ export default function SwapForm() {
     };
 
     const handleSubmitOrder = async (route: Route) => {
+        setIsDonating(true);
+        setTxStatus("pending");
+        setError(null);
         try {
             const executedRoute = await executeRoute(route, {
-                updateRouteHook(route) {
-                    console.log(route);
+                updateRouteHook(updatedRoute) {
+                    console.log("updateRouteHook", updatedRoute);
                 },
             });
 
-            console.log(executedRoute);
+            console.log("executedRoute", executedRoute);
+            // Handle successful donation here (e.g., show a success message)
         } catch (error) {
             console.error("Failed to execute route:", error);
+            setError("Failed to process donation. Please try again.");
+            setTxStatus("idle");
+        } finally {
+            setIsDonating(false);
         }
     };
 
     const handleTokenChange = (value: string) => {
         setTokenAddress(value);
-        const token = tokens.find(t => t.contractAddress === value);
+        const token = tokens.find((t) => t.contractAddress === value);
         setSelectedToken(token || null);
     };
 
     return (
-        <Card className="w-full max-w-md mx-auto">
+        <Card>
             <CardHeader>
                 <CardTitle>Donate</CardTitle>
                 <CardDescription>
-                    Enter the amount you want to donate, we handle bridging and swapping
+                    Support the project by donating crypto
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmitQuote}>
                     <div className="grid w-full items-center gap-4">
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="amount">{`Amount (${selectedToken?.symbol || 'ETH'})`}</Label>
+                            <Label htmlFor="amount">{`Amount (${
+                                selectedToken?.symbol || "ETH"
+                            })`}</Label>
                             <Input
                                 id="amount"
                                 type="number"
-                                placeholder={`Enter amount in ${selectedToken?.symbol || 'ETH'}`}
+                                placeholder={`Enter amount in ${
+                                    selectedToken?.symbol || "ETH"
+                                }`}
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 required
@@ -152,40 +175,70 @@ export default function SwapForm() {
                             </AccordionItem>
                         </Accordion>
                     </div>
-                    {!isConnected ? (
-                        <w3m-connect-button/>
-                    ) : (
-                        <div>
+                    <div className="flex justify-between items-center mt-4">
+                        <Button
+                            type="submit"
+                            className={`text-gray-700 font-semibold ${
+                                result && result.length > 0
+                                    ? "w-auto px-4 bg-gray-200 hover:bg-gray-300"
+                                    : "w-full bg-primary text-primary-foreground"
+                            }`}
+                            disabled={isLoading || isDonating}
+                        >
+                            {isLoading
+                                ? "Loading..."
+                                : result && result.length > 0
+                                    ? "Get another quote"
+                                    : "Get quote"}
+                        </Button>
+                        {result && result.length > 0 && (
                             <Button
-                                className="w-full mt-4"
-                                type="submit"
-                                disabled={isLoading}
+                                onClick={() => handleSubmitOrder(result[0])}
+                                className={`flex-grow ml-2 font-semibold ${
+                                    txStatus === "success"
+                                        ? "bg-green-500 hover:bg-green-600"
+                                        : "bg-blue-500 hover:bg-blue-600"
+                                } text-white`}
+                                disabled={isLoading || isDonating}
                             >
-                                {isLoading ? "Loading..." : "Get quote"}
+                                {isDonating
+                                    ? "Processing..."
+                                    : txStatus === "success"
+                                        ? "Donated!"
+                                        : "Donate"}
                             </Button>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </form>
             </CardContent>
             <CardFooter className="flex flex-col items-start">
-                {result && (
-                    <div>
-                        {result.map((route, index) => (
-                            <div key={index} className="flex flex-col space-y-1.5">
-                                <div className="flex justify-between items-center">
-                                    <span className="font-medium">{route.fromToken.symbol}</span>
-                                    <span>{route.fromAmount}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="font-medium">{route.toToken.symbol}</span>
-                                    <span>{route.toAmount}</span>
-                                </div>
-                                <button onClick={() => handleSubmitOrder(route)}>Donate</button>
-                            </div>
-                        ))}
+                {result && result.length > 0 && (
+                    <div className="w-full p-4 bg-gray-100 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+              <span className="font-medium">
+                From {result[0].fromToken.symbol}
+              </span>
+                            <span>
+                {parseFloat(result[0].fromAmount) /
+                    10 ** result[0].fromToken.decimals}
+              </span>
+                        </div>
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="font-medium">To {result[0].toToken.symbol}</span>
+                            <span>
+                {parseFloat(result[0].toAmount) /
+                    10 ** result[0].toToken.decimals}
+              </span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                            Estimated gas cost: {result[0].gasCostUSD} USD
+                        </div>
                     </div>
                 )}
                 {error && <div className="text-red-500 mt-2">{error}</div>}
+                {txStatus === "success" && (
+                    <div className="text-green-500 mt-2">Transaction successful!</div>
+                )}
             </CardFooter>
         </Card>
     );
