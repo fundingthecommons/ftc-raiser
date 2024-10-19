@@ -7,9 +7,10 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} 
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion";
-import {useAccount} from "wagmi";
+import {useAccount, useBalance} from "wagmi";
 import TokenSelector, {ExtendedTokenBalance,} from "@/components/token-selector";
 import {fetchAllSupportedTokensFromLiFi, fetchTokenBalances, fetchTokenMetadata,} from "@/lib/tokenUtils";
+import {parseUnits} from "viem";
 
 export default function SwapForm() {
     const [amount, setAmount] = useState("");
@@ -25,46 +26,65 @@ export default function SwapForm() {
     const [txStatus, setTxStatus] = useState<"idle" | "pending" | "success">(
         "idle"
     );
+    const balance = useBalance({
+        address,
+    })
+    const {chain} = useAccount();
 
     useEffect(() => {
-        const loadTokens = async () => {
-            if (!chainId || !address) {
-                setTokens([]);
-                return;
-            }
+            const loadTokens = async () => {
+                if (!chainId || !address || !chain) {
+                    setTokens([]);
+                    return;
+                }
 
-            try {
-                const [supportedTokens, balances] = await Promise.all([
-                    fetchAllSupportedTokensFromLiFi(chainId),
-                    fetchTokenBalances(address, chainId),
-                ]);
+                try {
+                    const [supportedTokens, balances] = await Promise.all([
+                        fetchAllSupportedTokensFromLiFi(chainId),
+                        fetchTokenBalances(address, chainId),
+                    ]);
 
-                const filteredTokens = balances.filter(
-                    (token) => BigInt(token.tokenBalance || "0") > BigInt(0)
-                );
+                    const filteredTokens = balances.filter(
+                        (token) => BigInt(token.tokenBalance || "0") > BigInt(0),
+                    );
 
-                const supportedTokenAddresses = new Set(
-                    supportedTokens?.tokens[chainId]?.map((token) =>
-                        token.address.toLowerCase()
-                    ) || []
-                );
+                    const supportedTokenAddresses = new Set(
+                        supportedTokens?.tokens[chainId]?.map((token) =>
+                            token.address.toLowerCase(),
+                        ) || [],
+                    );
 
-                const overlappingTokens = filteredTokens.filter((token) =>
-                    supportedTokenAddresses.has(token.contractAddress.toLowerCase())
-                );
+                    const overlappingTokens = filteredTokens.filter((token) =>
+                        supportedTokenAddresses.has(token.contractAddress.toLowerCase()),
+                    );
 
-                const tokensWithMetadata = await fetchTokenMetadata(
-                    overlappingTokens,
-                    chainId
-                );
-                setTokens(tokensWithMetadata);
-            } catch (error) {
-                console.error("Failed to fetch and process tokens:", error);
-            }
-        };
+                    const tokensWithMetadata = await fetchTokenMetadata(
+                        overlappingTokens,
+                        chainId,
+                    );
 
-        loadTokens();
-    }, [chainId, address]);
+                    const nativeToken = {
+                        contractAddress: "0x0000000000000000000000000000000000000000",
+                        tokenBalance: balance.value,
+                        name: chain.nativeCurrency.name || "Native",
+                        symbol: chain.nativeCurrency.symbol || "",
+                        decimals: chain.nativeCurrency.decimals,
+                        logo: null,
+                    };
+
+                    setTokens([nativeToken, ...tokensWithMetadata]);
+                } catch
+                    (error) {
+                    console.error("Failed to fetch and process tokens:", error);
+                }
+            };
+
+            loadTokens();
+        }
+        ,
+        [chainId, address]
+    )
+    ;
 
     const handleSubmitQuote = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,24 +93,23 @@ export default function SwapForm() {
         setResult(null);
 
         try {
-            if (!address || !chainId) {
+            if (!address || !chainId || !selectedToken?.contractAddress || !selectedToken?.decimals) {
                 throw new Error("No wallet or chain found.");
             }
-            const amountInWei = BigInt(parseFloat(amount) * 1e18).toString();
 
-            console.log({address, chainId, amountInWei, tokenAddress});
+            const amountInWei = parseUnits(amount, selectedToken.decimals);
+
             const result = await getRoutes({
                 fromAddress: address,
                 fromChainId: chainId,
                 toChainId: ChainId.OPT,
                 fromTokenAddress:
-                    tokenAddress || "0x0000000000000000000000000000000000000000",
+                    selectedToken.contractAddress || "0x0000000000000000000000000000000000000000",
                 toTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-                fromAmount: amountInWei,
+                fromAmount: amountInWei.toString(),
                 toAddress: "0xEe6196D67586f813a17E64f0dD7000D53edcb1aF",
             });
 
-            console.log(result);
 
             // Select the most optimal route (maximum donation output)
             const optimalRoute = result.routes.reduce((max, route) =>
