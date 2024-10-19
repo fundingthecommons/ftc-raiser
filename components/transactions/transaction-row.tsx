@@ -13,6 +13,8 @@ export function TransactionRow({
 }) {
   const displayName = transaction.ensName || transaction.senderAddress;
 
+  console.log(transaction);
+
   return (
     <TableRow className={isEven ? "" : "bg-gray-50"}>
       <TableCell className="flex flex-col py-4">
