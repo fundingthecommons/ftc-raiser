@@ -32,7 +32,6 @@ export default function LoginAndDonate() {
 				value: parseEther(amount),
 			});
 
-			console.log("Tx: ", tx);
 
 			toast({
 				title: "Transaction Sent",
