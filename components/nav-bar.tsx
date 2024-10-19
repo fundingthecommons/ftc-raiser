@@ -63,7 +63,7 @@ const Navbar = () => {
             Donations
           </Link>
           <Link
-            href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF"
+            href="/distribution/10/0xA2d3CfbAc9e74773e16B5d58b93FD8A7F60C3511"
             className="text-white hover:text-gray-200 transition-colors"
           >
             Distribution
@@ -93,7 +93,7 @@ const Navbar = () => {
           Donations
         </Link>
         <Link
-          href="/distribution/10/0xEe6196D67586f813a17E64f0dD7000D53edcb1aF"
+          href="/distribution/10/0xA2d3CfbAc9e74773e16B5d58b93FD8A7F60C3511"
           className="block text-white hover:text-gray-200 transition-colors py-2"
         >
           Distribution
