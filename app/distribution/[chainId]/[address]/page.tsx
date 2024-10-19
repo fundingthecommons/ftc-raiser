@@ -10,6 +10,11 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { Chart } from "react-google-charts";
+import { cn } from "@/lib/utils";
+import { ENSResolver } from "@/lib/ens";
+import { truncateAddress } from "@/lib/utils"; // Assume this function exists
 
 export default function DistributionPage() {
   const { chainId, address } = useParams<{
@@ -18,8 +23,48 @@ export default function DistributionPage() {
   }>();
   const { splitMetadata, isLoading } = useSplitMetadata(
     Number(chainId),
-    address,
+    address
   );
+  const [chartData, setChartData] = useState<any[]>([["From", "To", "Weight"]]);
+
+  useEffect(() => {
+    async function resolveENSNames() {
+      if (splitMetadata) {
+        const ensResolver = new ENSResolver();
+        const resolvedData = await Promise.all(
+          splitMetadata.recipients.map(async (recipient) => {
+            const ensName = await ensResolver.resolveAddress(
+              recipient.recipient.address
+            );
+            return [
+              truncateAddress(splitMetadata.address),
+              ensName || truncateAddress(recipient.recipient.address),
+              recipient.percentAllocation,
+            ];
+          })
+        );
+        setChartData([["From", "To", "Weight"], ...resolvedData]);
+      }
+    }
+    resolveENSNames();
+  }, [splitMetadata]);
+
+  const options = {
+    sankey: {
+      link: {
+        colorMode: "gradient",
+        colors: ["#57C2BA", "#8FD14F"], // Teal to light green gradient
+      },
+      node: {
+        colors: ["#57C2BA", "#8FD14F"], // Use the same colors for nodes
+        label: {
+          color: "#2C3E50", // Dark blue-gray for better readability
+          fontSize: 14, // Increase font size
+        },
+      },
+    },
+    tooltip: { isHtml: true }, // Enable HTML tooltips
+  };
 
   if (isLoading) {
     return (
@@ -63,9 +108,24 @@ export default function DistributionPage() {
       <Card>
         <CardHeader>
           <CardTitle>Split Overview</CardTitle>
-          <CardDescription>Address: {splitMetadata.address}</CardDescription>
+          <CardDescription>Address: {splitMetadata?.address}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div
+            className={cn(
+              "border rounded-lg p-4 mx-auto",
+              "w-full max-w-3xl h-[400px]" // Adjust max-width and height as needed
+            )}
+          >
+            <Chart
+              chartType="Sankey"
+              width="100%"
+              height="100%"
+              data={chartData}
+              options={options}
+            />
+          </div>
+
           <div>
             <h3 className="text-lg font-semibold mb-2">Controller</h3>
             {splitMetadata.controller ? (
